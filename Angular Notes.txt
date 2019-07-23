@@ -1,0 +1,687 @@
+Tree shaking 
+	Today's web applications can get pretty big, especially the JavaScript part of them.
+	is a term commonly used in the JavaScript context for dead-code elimination.
+	When we import and export modules in JavaScript, most of the time there is unused code floating around.
+	Tree shaking or dead code elimination means that unused modules will not be included in the bundle during the build process.
+
+CDK. 
+	The Component Dev Kit (CDK) is a set of tools that implement common interaction patterns whilst being unopinionated about their presentation. 
+	It represents an abstraction of the core functionalities found in the Angular Material library, without any styling specific to Material Design.
+
+
+Service Worker
+	Adding a service worker to an Angular application is one of the steps for turning an application into a Progressive Web App (also known as a PWA).
+	At its simplest, a service worker is a script that runs in the web browser and manages caching for an application.
+	Service workers function as a network proxy. They intercept all outgoing HTTP requests made by the application and can choose how to respond to them. For example, they can query a local cache and deliver a cached response if one is available. 
+		Unlike the other scripts that make up an application, such as the Angular app bundle, the service worker is preserved after the user closes the tab. 
+		The next time that browser loads the application, the service worker loads first, and can intercept every request for resources to load the application. If the service worker is designed to do so, it can completely satisfy the loading of the application, without the need for the network.
+
+inline.bundle.js: 
+	A tiny file that helps webpack load resources
+	This is a webpack loader. A tiny file with Webpack utilities that are needed to load the other files.
+main.bundle.js: 
+	The bulk of our Angular application
+	This is where the action happens. This file contains all your code.
+	This also include required node modules.
+polyfills.bundle.js: 
+	The things needed to let Angular work in older browsers
+styles.bundle.js:
+	The styles!
+vendor.bundle.js: 
+	The Angular specific libraries
+	This file contains any libraries imported into your app (app.module), including the Angular libraries. Third party libraries imported into your app also get compiled into this file (e.g. lodash, moment etc).
+	*Warning* this file is HUGE after a dev compile (ng build) because it contains everything required to compile Angular in the browser. 
+	Always run a prod build (ng build –prod) before releasing your app to production. A prod build runs the Ahead of Time (AoT) compilation and performs tree-shaking.
+*.map.js
+	https://stackoverflow.com/questions/21719562/javascript-map-files-javascript-source-maps
+	The .map files are for js and css (and now ts too) files that have been minified.
+	They are called SourceMaps. When you minify a file, like the angular.js file, it takes thousands of lines of pretty code and turns it into only a few lines of ugly code.
+	Hopefully, when you are shipping your code to production, you are using the minified code instead of the full, unminified version,
+	 When your app is in production, and has an error, the sourcemap will help take your ugly file, and will allow you to see the original version of the code
+	 If you didn't have the sourcemap, then any error would seem cryptic at best.
+	 
+	 
+Corejs 
+	Corejs in simple words it just fills the gap between different versions of ECMA. Suppose you have written code in ECMA6 and you want to run it in browser where it does not support ECMA6 then core-js comes into picture.
+Zonejs 
+	Zonejs as defined by Brain ford “A Zone is an execution context that persists across async tasks”.In Simple Words Zone wraps all async tasks into one unit.
+	A Zone is an execution context that persists across async tasks. You can think of it as thread-local storage for JavaScript VMs.
+	
+
+start = ng serve
+npm install = to install all the node dependencies mentioned in package.lock.json
+npm run script = to install the mentioned script file
+
+TO add Bootstrap CSS
+	npm install --save bootstrap@3
+	then in angular.json file add bootstrap css file in styles array =>
+	       "styles": [
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "src/styles.css"
+            ],
+
+TemplateURL => points to single file 
+StylesUrls => points to array of multiple files (stylesUrls : ["",""];)
+styles => points to array of strings (styles : 
+	[`
+	h3{
+	color:blue;
+	}
+	`];)
+
+Directive - Custom element in the template OR custom html tag OR custom html attribute
+			Enhance functionality of Angular
+			*ngif *ngfor => Structural directive
+			There are three kinds of directives in Angular:
+				Components
+				Structural directives
+				Attribute directives
+					selector : directive; => Select by element
+Default & should be =>	selector : [directive]; => Select by attribute
+			
+Decorator - A function that adds metadata to class , members or methods
+			Always prefixed with @
+			Its a kind of Function
+			Just Above the element without SemiColon;
+			eg. @Component @NgModule
+			
+Debuging - Developer Tool -> Sources
+			
+A class becomes Angular Component when we give component metadata(DECORATOR) by using @Component
+			
+Property binding -  binding property of an html element	inside []
+					source "" specfies templte expression
+					propert binding ~= Event binding
+					
+Two Way binding - ngModel
+			
+@Input => Data from parent to Child : Can be of any type (Object also)
+		If dont want to bind to same name in both component
+		[newVariableName]=5 (parent component) @Input('newVariableName') oldVariableName:any; (Child Component)
+		Same applies for @Output('var')
+@Output => Data form child to parent : Only type EventEmitter
+
+ngStyle => to add dynamic css property
+ngClass => to add dynamic css class
+	[ngStyle] = {'backgroundColor' : 'green'}
+	[ngClass] = {cssClassName : condition}
+	
+Emmet => Just Press tab
+Augury => Chrome Addon for debugging purpose
+
+	export class Recipe{
+    public name:string;
+    constructor(name:string){
+        this.name=name;
+    }
+	} 
+	=> IS EQUAL TO (typescript feature)
+	export class Recipe{
+    constructor(public name:string){
+    }
+	} 
+	
+<app-myComponent> Everything placed here is lost by default </app-myComponent>
+	<ng-content> </ng-content> is used to overocme this problem.Just place ng-content in the child component 
+	@ that location where you want the data between <app-myComponent> </app-myComponent> to be displayed.
+
+ng-container
+	In order to avoid having to create that extra div, we can instead use ng-container directive.
+	it can also provide a placeholder for injecting a template dynamically into the page.
+
+Life Cycle Hooks:
+	ngOnChanges() => Executed multiple times , first at start and then whenever any @Input() property changes
+		constructor() => NOT a life cycle hook
+	ngOnInit() => Executed when component is initialized
+	ngDoCheck() => Executed multiple times , whenever change detection runs (anything inside the template , ex. onevent also )
+	ngAfterContentInit() => Called whenever content project by ng-content is initialized
+	ngAfterContentChecked => Called every time the projected content has been checked
+	ngAfterViewInit => Called after component view and its child views has been initialized
+	ngAfterViewChecked => Called every time the view has been checked
+	ngOnDestroy => Called once the component is about to destroyed (cleanup  work)
+	
+	Note : The constructor is called before ngOnInit , at this point the component hasn’t been created yet, 
+	only the component class has being instantiated thus your dependencies are brought in, but your initialization code will not run.
+	
+PREVENT UNDEFINED 
+	Safe Navigation operator [?]
+	product?.productName
+	Does NOT work with 2 way binding [ngModel]
+
+ROUTER
+	Angular has one Router managed by AngularService
+	RouterModule in angualar package to register the Router Service Provider
+	RouteModule.forRoot([]) = Array full of route definition => Route Object(Path + Component)
+	Order of Routh object matters , more specific route should be before less specific route like exception handling 
+	a href reloads the page VS routerLink does NOT reloads the page
+	imports [ routerModule.forRoot(routerConstArray)]
+	TO display => <router-outlet> </router-outlet>
+	/servers  => Absolute path => Always get appended to root domain
+	servers = ./servers => 	Relative path => Added to current path  => Does NOT work in routerLink but works in router.navigate(['servers'])
+	routerLink knows the cuurrent route UNLIKE .navigate
+	
+	constructor( private route : ActivatedRoute){}
+	this.route.navigate(['servers'] ,  relativeTo : this.route)
+	users/:id :=> Dynamic part of path
+	In case of child route. One more <router-outlet> need to be defined in the child component
+	Guards => are nothing but a service {path : '' , completed : component , canActivate : [AuthGuard]} => canActivate method need to be implemented (export class AuthGuard implments canActivate)accoding to requirement in the AuthGuard
+			  canActivateChild
+	canDeactivate => ASk user if they realy want to leave from the route => Convinent method for keeping user to accidently navigating away => export class AuthGuard implments canDeactivate<canComponentInterface> =>
+	
+	 
+ng g s routerGuard -m app.module (to register the service in app module automatically)
+let id = +stringVariable (Converts the string into number)
+	
+
+ANGULAR MODULE
+	CLass with @NgModule Decorator
+	Every is array[]
+		declaration[]
+			Declares Component Directive and Pipe 
+			Every Component Directive and Pipe has to belong to ONE and only ONE Declaration Array i.e. App Module
+			All declared C D and P are private by default (need to be exported)
+			Angular module provide the template resolution environmnet for its component template
+		import[]
+			Importing a module does NOT provide access to its imported modules
+		export[] (NOT present by default while craeting class by angular cli)
+			Export any C D adn P if any another component of different module needs it
+			We can also reexport module(i.e exports its all C D and P) 
+		provider[]
+			Register @ shared modules , creates multiple instance of Service (applies same for component also)
+			Router Guard are addes here as well
+		bootstrap[]
+			Bootstrap Array defines the component the starting point of Application
+			Every app must bootstrap atleast one component
+				
+ 
+$EVENT => Reserve variable name, used in template in event binding => data emitted with that event
+	
+*NGIF 
+	The content is not presnt in the source code as well , as soon as condition becomes true it appears in source code
+	
+	<div *ngIf="isSet; else elseCondition"> </div>
+	<ng-template #elseCondition>
+    <div>
+        You are fuddu
+     </div>
+	</ng-template>
+	
+*NGFOR
+	<div *ngFor="let value of anyArray ; let i = index"></div> (i prints current index)
+
+VIEW ENCAPSULATION => Angular add unique test(css class) to each css element so that each component view is encapsulated with its css only
+		encapsulation: 	ViewEncapsulation.None (native , none and emulated[default])=> 
+		None Removes all attributes from css element
+		Native uses shadow dom technology , same result with emulated , in browser who supports it
+		
+#VARIABLE => local reference can be placed at any html element
+	can only be used in template NOT in ts code
+	<input type="text" #myvar>
+	<button (click)="fn(myvar)" value="">Click me</button>
+	
+@VIEWCHILD
+	No need to send value vai function can directly access template local variable OR pass component as well
+	<input type="text" #myvar>
+	<button (click)="fn()" value="">Click me</button>
+
+	In TS file
+	@ViewChild('myvar') variable:ElementRef;
+	console.log(this.variable.nativeElement.value);
+	
+HIRARCHIAL INJECTION
+	If we define in @ provider of a COMPONENT , then the same instace of service is available to all its child components(NOT for SERVICES)
+	If we define in @ provider of a APP-MODULE , then the same instace of service is available to all its childern components(ALSO  for SERVICES)
+	
+	@Injectable() => Tells angular that something can be injected in this Service. 
+	Not Added to the Service you want to Inject(Provider Service) INSTEAD 
+	Added @ the service where you want to inject (Receiving Service) 
+	
+CHANGE DETECTION
+	The developer is making changes to the model(like a component’s bindings);
+	Angular’s change detection kicks in to propagate the changes;
+	Change detection goes through every components in the component tree (from top to bottom) to check if the model it depends on changed;
+	If Yes, it will update the component;
+	Angular updates the component’s view (DOM).
+	
+	Angular change detection strategies
+		ChangeDetectionStrategy.Default => By default, Angular makes no assumption on what the component depends upon. So it has to be conservative and will checks every time something may have changed, this is called dirty checking.
+				   This can be problematic when you’re starting to have a big application with many components, specially if you’re focused on performance.
+		ChangeDetectionStrategy.onPush => To avoid this, there could be a scenario when you may want to instruct Angular that when change detector should run for a component and its subtree, you can instruct a component's change detector to run only when object references changes instead of mutation of any property by choosing the onPushChangeDetection strategy.
+				   In the onPush strategy, Angular will only run the change detector when a new reference is passed to @Input() data
+				   @Component({
+						selector: 'app-message',
+						changeDetection: ChangeDetectionStrategy.OnPush,
+
+Promises
+	We begin by creating a simple promise like this:
+		const one = new Promise<string>((resolve, reject) => {});
+		The promise constructor takes an executor callback which the compiler will call by the runtime with these two arguments:
+			resolve — This is a function that is used to resolve the promise.
+			reject — This is a function that is used to reject the promise.
+				So, our promise can either be resolved, or rejected. The resolve part is taken care of by .then, and the reject part is taken care of by .catch.
+				one.then(value => {
+				  console.log('resolved', value);
+				});
+				one.catch(error => {
+				  console.log('rejected', error);
+				});
+			If we resolve a Promise, then callbacks are executed. Else, it means that the Promise is rejected and the catch callbacks are executed.
+				Promise resolutions are easy to write:
+				resolve('Hello')
+			Promise rejections on the other hand, should only be done in exceptional cases. It is considered as a bad practice to reject a promise with a raw string. Always use the error constructor new Error when rejecting a promise.
+				reject(new Error('failed'));
+		
+		
+OBSERVABLE
+	If a observerable is completed than it does not fire next value.
+	ngOnDestroy() => Unsubscribe observable =>  this.myObservable.unsubscribe() => Built in angular observable destroy themselves automatically;
+	Operators/methods => http://reactivex.io/documentation/operators.html => catch/retry/  buffer/map/groupby/
+	For each subscriber the Observable starts a new execution, resulting in the fact that the data is not shared. 
+	If your Observable produces a lot of different values it can happen that two Observables that subscribe at more or less the same receive two different values. We call this behaviour “unicasting”
+	An Observable is cold when data is produced inside the Observable and the Observable is hot when the data is produced outside the Observable
+	Hot Observable is able to share data between multiple subscribers. We call this behaviour “multicasting”.
+	Suffix variable name with $ to represent as a observable variable.
+	RxJS has observers (consuming interface) and observables (push interface). 
+	
+	Subject :
+		A Subject is both an observer and observable. 
+		A BehaviorSubject a Subject that can emit the current value (Subjects have no concept of current value). 
+		It means that a subject can emit data, on top of having the capability to be subscribed to
+		The second super power of subjects is that they support multiple subscriptions. In other words, they are multicast.
+		Subjects are like EventEmitters: They maintain a registry of many listeners.
+		As a result, you can use a Subject in a service to fetch some data, and send the result to all components that subscribed to that Subject.
+		
+		There is one thing I would recommend though: Do not expose the Subject object directly to your components. Instead, return a good old Observable version of it:
+		// Don't do that or you subscribers will be able to "mess" with your // subject
+		getData(): Subject<Data> {  
+		return this.subject;
+		}
+		// Do this instead:
+		getData(): Observable<Data> {  
+		return this.subject.asObservable();
+		}
+		The above will make your code much safer and will prevent poor coding practices.
+		asObservable() => Hides the identity of an observable sequence
+					  When you don't want to leak the "observer-side" of a Subject out of your API
+					  they can't next values in to the result of observable:
+					  Returns : (Observable): An observable sequence that hides the identity of the source sequence.
+	
+	Behavior Subjects :
+		Behavior Subjects are another cool thing about subjects. When you subscribe to a behavior subject, it will give you the last emitted value right away.
+		// Behavior subjects need a first value
+		let subject = new BehaviorSubject<string>("First value");
+		
+	Replay Subjects :
+		Replay Subjects keep a given number of historical values so that those values can be replayed to new subscribers.
+		// We tell the ReplaySubject how many values should be kept in      // history
+		let subject = new ReplaySubject<string>(2);
+		
+	Subscription :
+		What is a Subscription? A Subscription is an object that represents a disposable resource, usually the execution of an Observable.
+		A Subscription has one important method, unsubscribe, that takes no argument and just disposes the resource held by the subscription. In previous versions of RxJS, Subscription was called "Disposable".
+		A Subscription essentially just has an unsubscribe() function to release resources or cancel Observable executions.
+		const subscription = observable.subscribe(x => console.log(x));
+		
+	Map VS FlatMap	
+		So, the main difference between Map and FlatMap that FlatMap mapper returns an observable itself, so it is used to map over asynchronous operations.
+		Very important: FlatMap is used to map over asynchronous operations.
+	
+	.publishReplay(1) 
+		this tells Rx to cache the latest emitted value
+		It internally creates a ReplaySubject and makes it multicast compatible. The minimal replay value of ReplaySubject is 1 emission. 
+		
+	.refCount(); 
+		and this tells Rx to keep the Observable alive as long as there are any Subscribers
+		refCount returns an observable that maintains a reference count of subscribers.
+	
+	error VS catcherror
+		error in observable => 
+			Using this approach, we cannot, for example, recover from the error or emit an alternative fallback value that replaces the value that we were expecting from the backend.
+		catcherror =>
+			Something close to try/catch block
+			catchError is simply a function that takes in an input Observable, and outputs an Output Observable.
+			With each call to catchError, we need to pass it a function which we will call the error handling function.
+			The catchError operator takes as input an Observable that might error out, and starts emitting the values of the input Observable in its output Observable.
+			If no error occurs, the output Observable produced by catchError works exactly the same way as the input Observable.
+			However, if an error occurs, then the catchError logic is going to kick in. The catchError operator is going to take the error and pass it to the error handling function.
+			That function is expected to return an Observable which is going to be a replacement Observable for the stream that just errored out.
+			Let's remember that the input stream of catchError has errored out, so according to the Observable contract we cannot use it anymore.
+			This replacement Observable is then going to be subscribed to and its values are going to be used in place of the errored out input Observable.
+			
+	.do() is to execute code for each event. A difference to .map() is, that the return value of .do() is ignored and doesn't change what value the subscriber receives.
+	In order to understand error handling in RxJs, we need to first understand that any given stream can only error out once.
+	if the stream completes, it cannot error out afterwards
+if the streams errors out, it cannot complete afterwards
+FORMS
+TEMPLATE DRIVEN => Access normal html form in the form of js object with the help of angular forms 
+	Import formsModule in imports array of app MODULE
+	ngModel needs to be added input type that needs to be added to js object(key value pair (key is defined by name="username") (value is data entered by user in the form))
+	Submiting form => can use (click) on submit button (NOT correct practice) because default property of html will be triggered 
+	angular provide => <form (ngSubmit)="onSubmitFunction(localForm) #localForm="ngForm"> ( ngForm is form created by Angular and we are storing in local variable localForm)
+						onSubmitFunction(formdata : ngForm){
+							console.log(formdata);
+						}
+	Differnt way to access form object without submitting is by using @ViewChild (@ViewChild("localForm") form : ngForm)
+	
+	this.myForm.form.patchValue(
+      {
+        username : "sage"
+      } => only updates the form data without changing old values (only requires few values in form object )
+	  
+	this.myForm.setValue(
+      {
+        username : "sage",
+        email : "kumar",
+        password : "gupta"
+      } => update the whole form (requires each data of form object to be passed)
+	myForm.reset() has benefit over { username : "" , email : "" , password : ""} is that it resets the css class as ng-untoched ng-pristine
+
+REACTIVE  => 	
+	
+PIPES
+	{{ mydate | date:'fullDate' | uppercase}} : => pass parameter to pipe (order matters)
+	Pure
+		Executed only when a pure change to input value is detected
+		Pure change is either a change to primitive input type(string,number,boolean) or a changed object reference (array,date,object)
+		A pure pipe is NOT executed if the input to the pipe is an object and the property value of object is changed but not reference.
+		
+	Impure
+		Works when property of object changes.
+		In effective - decrease app performance - runs everytime (every change)
+	
+	Async
+		The async pipe subscribes to an Observable or Promise and returns the latest value it has emitted. When a new value is emitted, the async pipe marks the component to be checked for changes.
+		When the component gets destroyed, the async pipe unsubscribes automatically to avoid potential memory leaks.
+		
+	json pipe
+		To output any model/data as string/json
+		{{ model | json}}
+HTTP
+	use firebase for demo
+	return this.http.post('url' , data , { header : yourHeaderConstantForTypeApplicationJson);
+	Unless subscribed no http request is send
+	
+!! => to convert a number into result of its truthiness.
+	
+| async => update value as soon as we get new value from observable/promise
+	
+	
+Angular 
+
+Starting point of Application
+	index.html & main.ts
+Component = template[html , view] + class[ts , logic ] + metadata[defined with decorator]
+			
+A class becomes Angular Component when we give component metadata by using @Component
+
+Model => ts file , A blueprint for object we create
+	
+To access a element
+	this.elementRef.nativeElement.style.backgroundColor = 'blue';
+	Better practice when we are NOT sure about the DOM element OR not running in browser than above will fail
+	this.renderer2.setStyle(this.elementRef.nativeElement , 'backgroundColor' , 'blue');
+	
+@HostListener
+
+Dependency => A class of ours will depends on something.
+Dependency Injection => inject an instace of dependent class into OUR component
+					    constructor(private log:LoggerService){}
+						providers: [ LoggerService ]
+	
+Observable
+	Is used to handle async task or request
+	In plain angular words => An object we import from 3rd party package (RxJs)
+Observer
+	Our code the function subscribe(data=> , error=> , complete=>)				
+
+Karma is a test runner. It can be used by QUnit, Jasmine, Mocha, etc
+	
+Increase App Performance
+	LOAD Time Performance
+		AOT enable
+		Prod flag: For the production, build specify the “prod” flag in the angular-cli application. It will enable various build optimizations like uglify, AOT, removal of sourcemaps, service workers (if enabled) producing a much smaller build size.
+		Lazy loading
+		Compressing images removing Unwanted imports
+		
+	RUN Time Performance (https://netbasal.com/optimizing-the-performance-of-your-angular-application-f222f1c16354)
+		Using OnPush : You can drastically reduce the change detection by setting “ChangeDetectionStrategy” to “OnPush”. The OnPush strategy promotes the use of immutable data structures.
+		Pure Pipes : In the “@Pipe” decorator you can specify “pure” flag as true. This flag indicates that the pipe is not dependent on any outside or global state and is side effect free
+		TrackBy: By default, *ngFor identifies object uniqueness by reference. If the object reference is broken by updating the content of the object, Angular removes the related DOM node completely and recreate it again even though the actual change required is for only a small part of the DOM node. This issue can be easily solved by using trackBy.
+			<li *ngFor="let item of items; trackBy: trackById">{{item.name}}</li>
+		Avoid complex computations in the template
+		EnableProdMode: Invoking “enableProdMode()” avoids Angular from performing additional checks for change detection.
+		Unsubscribing Observables: Observables could create the memory leak issue.
+		Updating Third Party Packages : Again regularly updating your third party packages may also result in better run time performance.
+		console.log(): Using console.log() statements in your production code could be a bad idea as it will slow down the performance of the app and also logging objects with console.log() creates memory leak issue.
+		Use of Global variable : There are many disadvantages of using global variables and one of them is the memory leak
+		
+State Management using REDUX (https://medium.com/codingthesmartway-com-blog/angular-and-redux-ecd22ea53492)
+	The state in Redux is stored in memory, in the Redux store. This means that, if you refresh the page, that state gets wiped out. 
+	The state in redux is just a variable that persists in memory because it is referenced (via closure) by all redux functions.
+	
+JS VS TS
+	We can call it a superset of javascript.It means that Typescript is JavaScript with some extra loaded features.
+	But Typescript may be used to develop a JavaScript application for both client-side and server side
+	One of the main advantages of JavaScript is that it does not require costly development tools, you can start with a simple text editor such as notepad. Since it is an interpreted language inside a web browser, so you don’t even need to buy a compiler. 
+	Whereas its counterpart, Typescript is included as a first-class programming language support expensive IDE visual studio 2013 update 2 and Eclipse via a plug in a contribution by particular technologies.
+	JS does not support client side read/write of files.JavaScript does not have any multithreading or multiprocessing capabilities.
+	TS is strongly typed object oriented compile language -- JS is light weight, interpreted scripting programming language.
+	Static typing in TS.
+	TypeScript uses concepts like types and interfaces to describe data being used.
+	TypeScript code needs to be compiled. No need to compile JavaScript.
+
+var VS let	
+	var is function scoped and let is block scoped.
+	It can be said that a variable declared with var is defined throughout the program as compared to let.
+	let gives you the privilege to declare variables that are limited in scope to the block, statement of expression unlike var.
+	var is rather a keyword which defines a variable globally regardless of block scope.
+	let variables cannot be re-declared while var variable can be re-declared in the same scope.
+	
+JS VS Angular
+	To prevent conflict of the router package version, the Angular team decided to skip the version 3 go straight for Angular v4
+	The architecture of AngularJS is based on MVC whereas the architecture of Angular 2 is based on service/controller.
+	Angular JS use JavaScript to build the application while from Angular v2.0 angular team introduced the typescript to write the application
+	With Angular v1.0 developing the search engine friendly Single Page Applications was the major difficulty. But this bottleneck was eliminated in Angular v2.0. 
+	JS does not support mobile support. Angular DOES.
+	
+ng-build VS ng-build--prod
+	https://sites.google.com/site/debasish22blog/angular-dev-build-vs-prod-build
+	Production Build is minified and uglified
+	AOT compilation takes place
+	Production build is tree shaked
+	
+Unsupporter browser in Angular
+	Browser-update.org
+		Include the JavaScript snippet from Browser-Update.org immediately before the </body> closing tag, either inline or in a .js file.
+		When using the Angular CLI, the Browser-Update.org script will run immediately before the Angular application’s JavaScript.
+		Browser-update.org is a tool to unobtrusively notify visitors that they should update their web browser in order to use your website.
+	Add Polyfills
+	
+Dynamic COMPONENT loader
+	 Use ComponentFactoryResolver to add components dynamically.
+	 
+Lazy Loading
+	With lazy loaded modules in Angular, it’s easy to have features loaded only when the user navigates to their routes for the first time.
+	
+	As your app grows, you can organize code relevant for a specific feature. 
+	This helps apply clear boundaries for features. 
+	With feature modules, you can keep code related to a specific functionality or feature separate from other code
+	While you can do everything within the root module, feature modules help you partition the app into focused areas.
+	A feature module collaborates with the root module and with other modules through the services it provides and the components, directives, and pipes that it shares.
+	Structure of Feature Module
+		the first imports => NgModule
+		the second imports => CommonModule => which contributes many common directives such as ngIf and ngFor
+		Feature modules import CommonModule instead of BrowserModule, which is only imported once in the root module.
+	In main App module route
+		{ path: 'shop', loadChildren: './shop/shop.module#ShopModule' }
+		Notice the odd-looking syntax with loadChildren: first, the path to the module, then #, followed by the module’s class name.
+		This instructs the router that the module should be lazy loaded and tells it where to find the module.
+		And finally, in the feature module itself, you’ll include your routes with RouterModule’s forChild method instead of forRoot:
+		
+		
+Advantages of Bootstrap:
+	Easy to use:
+	Responsive features:
+	Mobile-first approach: 
+	Browser compatibility:
+	Mobile-Friendly
+	 
+Cookie VS session VS local
+	All are stored in actual browser user is using. C/S/L stored in chrome is not available for firefox/ie/etc.
+	User do NOT share C/S/L to other user.
+	Cookie 					4kb     html4   available to all tab		expiration needs to be set						sent to server on each request/ user for authentication	
+	Local Storage 			10mb 	html5	available to all tab		permanent/ user removes it-browser cache/		not send
+	Session Storage 		5mb 	html5 	available to single tab		removed ASA respective tab is closed			not send
+	Every data is stored as string key and string value pair, just like js object.
+	For multiple tabs question
+		Share sessionStorage between tabs using localStorage events
+		
+	Cookies can be made secure by setting the httpOnly flag as true for that cookie. This prevents client-side access to that cookie
+	Cookies are primarily for server-side reading (can also be read on client-side), localStorage and sessionStorage can only be read on client-side.
+	
+	
+AOT VS JIT
+	Since majority of the features of TS are still not supported by the browser, we convert our code from TS to JS first, and then we serve these JS files to the browser (which again compiles the JS files to a binary which they understand).
+	Essentially we are compiling the code twice with angular2 apps, once when we convert TS to JS and then when the browser converts JS to binary.
+	While we cannot control the latter, we can however control when the compilation from TS to JS is performed.
+	If you go with JIT (which is default), both the compiles happen after the code is loaded in the browser (i.e. TS -> JS -> binary)
+	Not only is it an additional overhead to do the TS -> JS compilation on the fly on the browser, but also, the angular2 compiler is almost half the size of the angular2 package so if we avoid this, we can reduce the size of the payload significantly.
+	Configure AOT
+		Now, to be able to compile ahead of time, we need to have the compiler and the platform-server installed in the app.
+			npm install @angular/compiler-cli @angular/platform-server --save
+		In JIT 
+			Once TypeScript is installed globally, we get access to the tsc command line tool and then we can run this tsc command within any project to convert TS to JS.
+			The tsc command a config file tsconfig.ts
+		For AOT
+			For angular2 AOT we will rely on the ngc command line tool (angular compiler) which we just installed instead of the standard tsc (TypeScript compiler).
+			We need to create config file tsconfig-aot.ts for ngc 
+		We need to realize that we will no longer be relying on any module to load the modules and the associated templates and stylesheets.
+			@Component({
+			moduleId: module.id,
+			selector: 'app-root',
+			templateUrl: 'app.component.html',
+			styleUrls: ['app.component.css']
+			})
+		
+Minification and Tree Shaking
+	Tree shaking is a term commonly used in the JavaScript context for dead-code elimination.
+	ng build --prod
+	
+	 A synchronous operation blocks a process till the operation completes. An asynchronous operation is non-blocking and only initiates the operation.
+		
+		
+How to inject 3rd party library
+	https://hackernoon.com/angular-providers-how-to-inject-3rd-party-library-af4a78722864
+	
+CORS - Cross Origin Resource Sharing.
+	By default, a request to non-parent domains (domains other than the domain from which you are making the call) is blocked by the browser
+	The same-origin policy lets resources (such as JavaScript) interact with resources from the same domain, but not with resources from a different domain. This provides security for the user by preventing abuse, such as running a script that reads the password field on a secure website.
+	When a browser executes a script that references a resource on another domain, it requests the content directly from the second domain. The second domain determines whether or not to serve the content by validating the first domain, which is included as part of the request. The second domain then returns either the content or an error message back to the browser, bypassing the first domain entirely.
+	In short, the same-origin policy enforces that documents that interact with each other have the same origin.
+	Exactly how you enable CORS depends on your server. In general, you need to add a header to the server response that looks like this:
+	Access-Control-Allow-Origin: *
+	I used domains as an example. But Same-Origin Policy applies to origins. How is an origin defined? Two origins are considered to be equal if they have the same protocol, host, and port – sometimes referred to as “scheme/host/port tuple”. It explains why we see this error – even if both our backend and frontend run locally – they use different ports, and thus, they have different origins.
+	Simple Requests
+		To put it simply, a simple request is the one that doesn’t trigger the preflight request. A request doesn’t trigger preflight request if it meets all of the following conditions:
+
+		uses GET, HEAD or POST method
+		doesn’t have headers other than the small subset defined in the specification (any custom or Authorization header breaks this condition)
+		the only allowed values for Content-Type header are application/x-www-form-urlencoded, multipart/form-data, text/plain (application/json breaks this condition)
+	Preflighted Requests
+		As described earlier, even adding a header such as Authorization causes a request to be preflighted. A request is preflighted if a browser first sends an additional preliminary OPTIONS request (“preflight request”) in order to determine whether the actual request (“preflighted request”) is safe to send
+	
+	Because as described above, SOP/CORS doesn’t apply to server-to-server communication, only to browser-to-server one.
+From:
+	https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
+	https://www.maxcdn.com/one/visual-glossary/cors/?utm_source=text
+    https://www.maxcdn.com/one/visual-glossary/cors/?utm_source=text
+	http://gnomeontherun.com/2014/11/20/how-to-fix-cors-problems-and-no-access-control-allow-origin-header-errors-with-ionic/
+	https://www.geeksforgeeks.org/cross-origin-resource-sharing-cors/
+	
+	
+ng lint
+	To have tslint autofix many errors run the following in the root of your code.
+	Obviously it can only autofix simpler issues like let -> const, "" -> ' etc.
+	
+Promise VS Observable
+	Promises are eager and are executed immediately. Observables are not eager and are only executed when subscribed to.
+	Promises are asynchronous. Observables can be either synchronous or asynchronous.
+	Promises are expected to return only a single value (like a function). Observables can return zero, one or more (infinitely) values.
+	 
+CLI
+	It uses Webpack to include all the packaging, importing, BrowserLink etc., but you do not need to know how Webpack works or how it needs to be configured to run in different environments or on different types of machines. 
+	All the Webpack configuration is done completely by CLI and leaves it out of the hands of a developer, unless they choose to adjust the settings themselves.
+	In addition, CLI assists developers by generating code which follows the best practices as defined by https://Angular.io, Angular’s home site.
+	
+Webpack
+	They did this by embedding webpack in the Angular CLI. Now, as an Angular developer you don’t need to know anything about webpack. The Angular CLI hides all that webpack complexity. 
+	However, that simplicity comes at the price of flexibility. By using the Angular CLI you lose the ability to configure and customize webpack
+	
+	In our project we can find a local copy of the Angular CLI here: node_modules\@angular\cli
+	
+	Entries and outputs:
+	Webpack is a powerful module bundler.
+	A bundle is a JavaScript file that incorporates assets that belong together and should be served to the client in a response to a single file request. A bundle can include JavaScript, CSS styles, HTML, and almost any other kind of file.
+	Webpack roams over your application source code, looking for import statements, building a dependency graph, and emitting one or more bundles
+	You determine what Webpack does and how it does it with a JavaScript configuration file, webpack.config.js.
+	You supply Webpack with one or more entry files and let it find and incorporate the dependencies that radiate from those entries. The one entry point file in this example is the application's root file, src/main.ts:
+		webpack.config.js (single entry)
+		entry: {
+		  'app': './src/main.ts'
+		},
+	Webpack inspects that file and traverses its import dependencies recursively.
+	It sees that you're importing @angular/core so it adds that to its dependency list for potential inclusion in the bundle. 
+	It opens the @angular/core file and follows its network of import statements until it has built the complete dependency graph from main.ts down.
+	
+	Then it outputs these files to the app.js bundle file designated in configuration:
+		output: {
+		  filename: 'app.js'
+		}
+	This app.js output bundle is a single JavaScript file that contains the application source and its dependencies. You'll load it later with a <script> tag in the index.html.
+	
+	Loaders :
+	Webpack itself only understands JavaScript files. Teach it to transform non-JavaScript file into their JavaScript equivalents with loaders. Configure loaders for TypeScript and CSS as follows.
+	
+	Plugins:
+	Webpack has a build pipeline with well-defined phases.
+	
+	Webpack handles the importing of 3rd party libraries. 
+	Webpack will handle the import process to your Angular project and turn them into modules for the developer automatically.  
+	Webpack also supports BrowserLink, which recognizes file changes when you change your Angular code, and automatically refreshes the browser that is listening to the app.
+	Webpack will handle a process called, “Code Spitting,” which bundles files together for Lazy Loading and better data caching while the project is running.
+	Finally, it also minifies your JavaScript files, which speeds up your program and readies your code for a production environment. 
+	Essentially, Webpack works like task runner on windows, and provides developers with a large amount of functionality pre-built in a fresh project.
+	You determine what Webpack does and how it does it with a JavaScript configuration file, webpack.config.js.
+	
+NPM
+	NPM is a package manager for Node.js packages, or modules if you like.
+	The Angular Framework, Angular CLI, and components used by Angular applications are packaged as npm packages and distributed via the npm registry.
+
+Node.js
+	Node.js is a cross-platform runtime library and environment for running JavaScript applications outside the browser. This is a free and open source tool used for creating server-side JS applications.
+	Browser does not understand Typescript JS (i.e., .ts) we need to compile them in plain JavaScript i.e., .js.
+	We need to use Node and NPM compile them into js file so that we can deploy them in production.
+	Node Package Manager is heavily dependent on Node.js.
+		node.js is only used to manage the dependencies of an angular 2 application.If you can somehow manage to get those dependencies without using node.js, npm or jspm then you can run and develop your application offline.
+		However, doing it manually will take an inexorable amount of time since you have to download files manually which may have other dependencies which will require other files to be downloaded again (yes I've been there). 
+		node.js or npm or jspm for that matter automates this process as well as taking all the necessary steps of configuring the files (jspm) so that whenever you use a particular dependency in your application, that particular dependency's other dependency will also be present in your system.
+	Also, minification, bundling, build optimnization. etc are done by node js.
+	
+package-lock.json
+	npm install => install all dependencies mentioned in the above file.
+
+	
+	
+	
+set-timeout()
+	Everything that's inside an asynchronous callback (as in setTimeout) will be run after any other synchronous code; this is why hacks like setTimeout(() => {}, 0) work.
+	We have no way of ensuring 1000ms is exactly 1000ms (but we know it's at least 1000ms).
+	
+Debugging
+	Add debugger; as a breakpoint in chrome
+	.tap in rxjs observable
+	ng.probe($0).componentInstance => detail of component
+	ng.probe($0)
+	ng.profiler.timeChangeDetection() => To check how much time it takes for change detection to run
+	console.warn() and console.error() will also print the call stack long with the warning/error.
+	
